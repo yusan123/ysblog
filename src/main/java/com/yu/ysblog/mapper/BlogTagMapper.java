@@ -2,6 +2,7 @@ package com.yu.ysblog.mapper;
 
 import com.yu.ysblog.entity.dao.BlogTag;
 import com.yu.ysblog.entity.dao.Tag;
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
@@ -32,4 +33,7 @@ public interface BlogTagMapper {
 
     @Select("select count(*) from blog_tag where tag_id=#{tagId}")
     int countByTagId(String tagId);
+
+    @Delete("delete from blog_tag where blog_id=#{blogId}")
+    int delete(String blogId);
 }

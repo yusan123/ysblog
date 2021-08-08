@@ -1,8 +1,10 @@
 package com.yu.ysblog.controller.admin;
 
+import com.alibaba.fastjson.JSON;
 import com.yu.ysblog.entity.dao.Blog;
 import com.yu.ysblog.entity.dao.BlogTag;
 import com.yu.ysblog.entity.vo.BlogAddReq;
+import com.yu.ysblog.entity.vo.BlogUpdateReq;
 import com.yu.ysblog.entity.vo.BlogVO;
 import com.yu.ysblog.mapper.BlogMapper;
 import com.yu.ysblog.mapper.BlogTagMapper;
@@ -12,6 +14,7 @@ import com.yu.ysblog.util.CommonUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
@@ -53,8 +56,9 @@ public class BlogController {
     }
 
     @PostMapping("/create")
+    @Transactional
     public CommonResponse create(@RequestBody BlogAddReq blogAddReq) {
-
+        log.info("新增博客参数为：" + JSON.toJSONString(blogAddReq));
         // 保存博客基本信息
         Blog blog = new Blog();
         BeanUtils.copyProperties(blogAddReq, blog);
@@ -82,16 +86,66 @@ public class BlogController {
     }
 
 
+    @PutMapping("/update")
+    @Transactional
+    public CommonResponse update(@RequestBody BlogUpdateReq blogUpdateReq) {
+        log.info("更新博客参数为：" + JSON.toJSONString(blogUpdateReq));
+        // 查询博客基本信息
+        Blog b = blogMapper.selectById(blogUpdateReq.getId());
+        if (b == null) {
+            return CommonResponse.failResp("不存在此id的博客内容", null);
+        }
+        b.setUpdateTime(new Date());
+        b.setTitle(blogUpdateReq.getTitle());
+        b.setContext(blogUpdateReq.getContext());
+
+        // 更新博客基本信息
+        blogMapper.update(b);
+
+        // 更新博客关联的标签
+        // 1.先删除博客之前关联的所有标签
+        String blogId = b.getId();
+        blogTagMapper.delete(blogId);
+        // 2.重写博客对应的标签
+        List<String> tagIds = blogUpdateReq.getTagIds();
+        for (String tagId : tagIds) {
+            BlogTag blogTag = BlogTag.builder().id(CommonUtil.uuid()).blogId(blogId).tagId(tagId).build();
+            blogTagMapper.insert(blogTag);
+            log.info("create blog tag success: blogId={}, tagId={}", blogId, tagId);
+        }
+        return CommonResponse.successResp("更新博客成功.", "blogId: " + blogId);
+    }
+
+    @DeleteMapping("/delete")
+    @Transactional
+    public CommonResponse delete(@RequestParam String id) {
+        // 查询博客基本信息
+        Blog b = blogMapper.selectById(id);
+        if (b == null) {
+            return CommonResponse.failResp("不存在此id的博客内容", null);
+        }
+        // 删除博客基本信息
+        blogMapper.delete(id);
+
+        // 删除博客关联的标签
+        blogTagMapper.delete(id);
+        // todo 删除博客关联的评论
+
+        return CommonResponse.successResp("删除博客成功.", null);
+    }
+
+
     @GetMapping("/getById")
     public CommonResponse getById(@RequestParam String id) {
         // 查询博客基本信息
         Blog b = blogMapper.selectById(id);
-
+        if (b == null) {
+            return CommonResponse.failResp("不存在此id的博客内容", null);
+        }
         BlogVO blogVO = BlogVO.builder().build();
         BeanUtils.copyProperties(b, blogVO);
         blogVO.setTags(blogTagMapper.selectByBlogId(b.getId()));
 
         return CommonResponse.successResp("查询单个博客成功", blogVO);
     }
-
 }
