@@ -29,4 +29,7 @@ public interface BlogTagMapper {
 
     @Select("select b.id,b.name from blog_tag as a left OUTER join tag as b on a.tag_id=b.id where a.blog_id=#{blogId}")
     List<Tag> selectByBlogId(String blogId);
+
+    @Select("select count(*) from blog_tag where tag_id=#{tagId}")
+    int countByTagId(String tagId);
 }

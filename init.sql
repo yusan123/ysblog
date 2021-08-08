@@ -13,6 +13,9 @@ create table tag
     id   varchar(64) primary key,
     name varchar(150)
 );
+-- 增加唯一索引保证标签名不能重复
+create unique index tag_name_uindex
+	on tag (name);
 -- 博客与分类的关联关系表
 create table blog_tag
 (

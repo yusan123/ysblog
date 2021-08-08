@@ -14,8 +14,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -77,7 +75,7 @@ public class BlogController {
             count += insert;
             log.info("create blog tag success: blogId={}, tagId={}", blogId, tagId);
         }
-        if(tagIds.size() != count){
+        if (tagIds.size() != count) {
             return CommonResponse.failResp("创建博客标签出错", null);
         }
         return CommonResponse.successResp("新增博客成功", "blogId: " + blogId);
