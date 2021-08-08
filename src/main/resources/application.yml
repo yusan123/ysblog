@@ -1,3 +1,4 @@
+
 spring:
   datasource:
     driver-class-name: org.sqlite.JDBC
@@ -18,4 +19,6 @@ logging:
     java.sql.Connection: debug
     java.sql.Statement: debug
     java.sql.PreparedStatement: debug
-
+server:
+  servlet:
+    context-path: /api
