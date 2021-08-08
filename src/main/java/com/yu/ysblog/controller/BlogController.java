@@ -3,6 +3,7 @@ package com.yu.ysblog.controller;
 import com.alibaba.fastjson.JSON;
 import com.yu.ysblog.entity.dao.Blog;
 import com.yu.ysblog.entity.dao.BlogTag;
+import com.yu.ysblog.entity.dao.Tag;
 import com.yu.ysblog.entity.vo.BlogAddReq;
 import com.yu.ysblog.entity.vo.BlogUpdateReq;
 import com.yu.ysblog.entity.vo.BlogVO;
@@ -15,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
@@ -40,7 +42,7 @@ public class BlogController {
     BlogTagMapper blogTagMapper;
 
     @GetMapping("/all")
-    public CommonResponse queryAllBlog() {
+    public CommonResponse queryAllBlog(@RequestParam(required = false) String tagName) {
         // 查询博客基本信息
         List<Blog> blogs = blogMapper.selectAll();
 
@@ -52,6 +54,19 @@ public class BlogController {
             blogVO.setTags(blogTagMapper.selectByBlogId(b.getId()));
             return blogVO;
         }).collect(Collectors.toList());
+
+        // 如果有查询条件则根据查询条件过滤
+        if (!ObjectUtils.isEmpty(tagName)) {
+            voList = voList.stream().filter(v -> {
+                List<Tag> tags = v.getTags();
+                for (Tag tag : tags) {
+                    if (tag.getName().equalsIgnoreCase(tagName)) {
+                        return true;
+                    }
+                }
+                return false;
+            }).collect(Collectors.toList());
+        }
         return CommonResponse.successResp("查询所有博客成功", voList);
     }
 

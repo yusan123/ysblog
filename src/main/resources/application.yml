@@ -1,9 +1,6 @@
 spring:
   datasource:
     driver-class-name: org.sqlite.JDBC
-    # \u65B9\u5F0F\u4E00\uFF1A  \u5F15\u7528\u5916\u90E8\u6587\u4EF6
-    #        url: jdbc:sqlite:D:/eclipse/xy.db
-    #\u65B9\u5F0F\u4E8C\uFF1A \u5F15\u7528\u9879\u76EE\u4E2D\u7684\u6587\u4EF6
     url: jdbc:sqlite:C:\Users\db\ysblog.db
     username:
     password:
@@ -11,10 +8,8 @@ spring:
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: GMT+8
 mybatis:
-#  mapperLocations: classpath:mapper/**/*.xml
   configuration:
     map-underscore-to-camel-case: true
-#  type-handlers-package: com.yu.ysblog.config
 
 logging:
   level:

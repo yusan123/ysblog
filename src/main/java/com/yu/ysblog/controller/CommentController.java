@@ -8,6 +8,7 @@ import com.yu.ysblog.util.CommonResponse;
 import com.yu.ysblog.util.CommonUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -46,16 +47,21 @@ public class CommentController {
     }
 
     @GetMapping("/all")
-    public CommonResponse getAll() {
-        List<Comment> comments = commentMapper.selectAll();
+    public CommonResponse getAll(@RequestParam(required = false) String blogId) {
+        List<Comment> comments;
+        if (ObjectUtils.isEmpty(blogId)) {
+            comments = commentMapper.selectAll();
+        } else {
+            comments = commentMapper.getByBlogId(blogId);
+        }
         return CommonResponse.successResp("查询所有评论成功.", comments);
     }
 
-    @GetMapping("/getByBlogId")
-    public CommonResponse getByBlogId(@RequestParam String blogId) {
-        List<Comment> comments = commentMapper.getByBlogId(blogId);
-        return CommonResponse.successResp("查询指定博客所有评论成功.", comments);
-    }
+//    @GetMapping("/getByBlogId")
+//    public CommonResponse getByBlogId(@RequestParam String blogId) {
+//        List<Comment> comments = commentMapper.getByBlogId(blogId);
+//        return CommonResponse.successResp("查询指定博客所有评论成功.", comments);
+//    }
 
     @DeleteMapping("/delete")
     public CommonResponse del(@RequestParam String ids) {
