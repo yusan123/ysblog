@@ -14,7 +14,7 @@ import java.util.List;
 @Component
 public interface BlogMapper {
 
-    @Select("select * from blog")
+    @Select("select * from blog order by update_time desc")
     List<Blog> selectAll();
 
     @Select("select * from blog where id=#{id}")

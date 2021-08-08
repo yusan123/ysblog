@@ -6,17 +6,18 @@ import java.util.Date;
 
 /**
  * @Author yu
- * @DateTime 2021/8/7 20:24
+ * @DateTime 2021/8/8 12:02
  */
 @Data
 @AllArgsConstructor
 @Builder
 @NoArgsConstructor
 @ToString
-public class Blog {
+public class Comment {
     private String id;
-    private String title;
+    private String content;
     private Date createTime;
-    private Date updateTime;
-    private String context;
+    private String blogId;
+    private String parentId;
+    private String ip;
 }

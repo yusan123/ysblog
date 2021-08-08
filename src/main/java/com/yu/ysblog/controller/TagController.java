@@ -1,4 +1,4 @@
-package com.yu.ysblog.controller.admin;
+package com.yu.ysblog.controller;
 
 import com.yu.ysblog.entity.dao.Tag;
 import com.yu.ysblog.mapper.BlogTagMapper;

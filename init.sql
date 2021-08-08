@@ -24,3 +24,14 @@ create table blog_tag
     tag_id varchar(64)
 );
 
+-- 博客评论表
+create table comment
+(
+    id  varchar(64) primary key,
+    content varchar(150),
+    create_time datetime,
+    blog_id varchar(64),
+    parent_id varchar(64),
+    ip varchar(64)
+);
+

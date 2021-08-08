@@ -1,4 +1,4 @@
-package com.yu.ysblog.controller.admin;
+package com.yu.ysblog.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.yu.ysblog.entity.dao.Blog;
