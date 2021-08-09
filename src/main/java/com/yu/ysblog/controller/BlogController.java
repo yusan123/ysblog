@@ -9,6 +9,7 @@ import com.yu.ysblog.entity.vo.BlogUpdateReq;
 import com.yu.ysblog.entity.vo.BlogVO;
 import com.yu.ysblog.mapper.BlogMapper;
 import com.yu.ysblog.mapper.BlogTagMapper;
+import com.yu.ysblog.mapper.CommentMapper;
 import com.yu.ysblog.mapper.TagMapper;
 import com.yu.ysblog.util.CommonResponse;
 import com.yu.ysblog.util.CommonUtil;
@@ -41,6 +42,9 @@ public class BlogController {
     @Autowired
     BlogTagMapper blogTagMapper;
 
+    @Autowired
+    CommentMapper commentMapper;
+
     @GetMapping("/all")
     public CommonResponse queryAllBlog(@RequestParam(required = false) String tagName) {
         // 查询博客基本信息
@@ -52,6 +56,8 @@ public class BlogController {
             BeanUtils.copyProperties(b, blogVO);
             // 查询出此博客管理出的所有标签
             blogVO.setTags(blogTagMapper.selectByBlogId(b.getId()));
+            // 查询出此博客有多少评论数
+            blogVO.setCommentCount(commentMapper.countByBlogId(b.getId()));
             return blogVO;
         }).collect(Collectors.toList());
 
@@ -160,6 +166,8 @@ public class BlogController {
         BlogVO blogVO = BlogVO.builder().build();
         BeanUtils.copyProperties(b, blogVO);
         blogVO.setTags(blogTagMapper.selectByBlogId(b.getId()));
+        // 查询出此博客有多少评论数
+        blogVO.setCommentCount(commentMapper.countByBlogId(b.getId()));
 
         return CommonResponse.successResp("查询单个博客成功", blogVO);
     }

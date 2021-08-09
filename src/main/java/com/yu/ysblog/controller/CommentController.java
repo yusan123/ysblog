@@ -34,7 +34,9 @@ public class CommentController {
     @PostMapping("/create")
     public CommonResponse create(@RequestBody CommentAddReq commentAddReq) {
         log.info("博客新增评论的参数为：" + JSON.toJSONString(commentAddReq));
-
+        if (ObjectUtils.isEmpty(commentAddReq.getContent())) {
+            throw new RuntimeException("评论内容不能为空.");
+        }
         Comment comment = Comment.builder()
                 .id(CommonUtil.uuid())
                 .blogId(commentAddReq.getBlogId())

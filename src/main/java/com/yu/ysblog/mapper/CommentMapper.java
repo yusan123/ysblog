@@ -24,7 +24,7 @@ public interface CommentMapper {
     Comment selectById(String id);
 
     @Select("select count(*) from comment where blog_id=#{blogId}")
-    int countByBlogId(String name);
+    int countByBlogId(String blogId);
 
     // 插入 并查询id 赋给传入的对象
     @Insert("insert into comment values (#{id},#{content},#{createTime},#{blogId},#{parentId},#{ip})")

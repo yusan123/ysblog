@@ -21,5 +21,6 @@ public class BlogVO {
     private Date createTime;
     private Date updateTime;
     private String context;
+    private int commentCount;
     private List<Tag> tags;
 }
